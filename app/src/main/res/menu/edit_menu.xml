@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/save_btn"
-        android:icon="@drawable/ic_baseline_save_48"
+        android:icon="@drawable/ic_baseline_save"
         android:title=""
         app:showAsAction="always" />
 

@@ -1,11 +1,17 @@
 package com.example.matrixphotoeditor;
 
+import static com.example.matrixphotoeditor.SimpleEffectActivity.BRIGHTNESS;
+import static com.example.matrixphotoeditor.SimpleEffectActivity.CONTRAST;
+import static com.example.matrixphotoeditor.SimpleEffectActivity.EFFECT;
+import static com.example.matrixphotoeditor.SimpleEffectActivity.MATRIX;
+
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
@@ -15,10 +21,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
-public class EditActivity extends AppCompatActivity {
+public class EditActivity extends AppCompatActivity implements View.OnClickListener {
+
     private Uri imageUri;
     private ImageView userImage;
-    private Button effectBtn;
+    private Button brightBtn, contrastBtn;
+    private ActionBar actionBar;
+    private ColorMatrix globalMatrix;
 
     private final int APPLY_EFFECT = 100;
 
@@ -27,25 +36,37 @@ public class EditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setTitle("Edit photo");
 
         userImage = findViewById(R.id.user_image);
-        effectBtn = findViewById(R.id.effect_btn);
+        brightBtn = findViewById(R.id.bright_btn);
+        contrastBtn = findViewById(R.id.contrast_btn);
 
         imageUri = getIntent().getData();
         userImage.setImageURI(imageUri);
+        globalMatrix = new ColorMatrix();
 
-        effectBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startEffectActivity();
-            }
-        });
+        brightBtn.setOnClickListener(this);
+        contrastBtn.setOnClickListener(this);
     }
 
-    private void startEffectActivity() {
-        Intent intent = new Intent(this, EffectActivity.class);
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.bright_btn:
+                startEffectActivity(BRIGHTNESS);
+                break;
+            case R.id.contrast_btn:
+                startEffectActivity(CONTRAST);
+        }
+    }
+
+    private void startEffectActivity(String effect) {
+        Intent intent = new Intent(this, SimpleEffectActivity.class);
+        intent.putExtra(EFFECT, effect);
+        intent.putExtra(MATRIX, globalMatrix.getArray());
         intent.setData(imageUri);
         startActivityForResult(intent, APPLY_EFFECT);
     }
@@ -55,7 +76,8 @@ public class EditActivity extends AppCompatActivity {
 
         if (resultCode == RESULT_OK) {
             if (requestCode == APPLY_EFFECT) {
-                // TODO: update image
+                globalMatrix = new ColorMatrix(data.getFloatArrayExtra("Matrix"));
+                userImage.setColorFilter(new ColorMatrixColorFilter(globalMatrix));
             }
         }
     }

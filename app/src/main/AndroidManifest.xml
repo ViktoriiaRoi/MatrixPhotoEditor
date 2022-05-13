@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MatrixPhotoEditor">
         <activity
-            android:name=".EffectActivity"
+            android:name=".SimpleEffectActivity"
             android:exported="false" />
         <activity
             android:name=".EditActivity"

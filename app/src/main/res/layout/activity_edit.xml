@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EffectActivity">
+    tools:context=".SimpleEffectActivity">
 
     <ImageView
         android:id="@+id/user_image"
@@ -14,12 +14,20 @@
         android:layout_marginTop="100dp"/>
 
     <Button
-        android:id="@+id/effect_btn"
+        android:id="@+id/bright_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
         android:layout_marginVertical="40dp"
         android:text="Change Brightness"/>
+
+    <Button
+        android:id="@+id/contrast_btn"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginVertical="40dp"
+        android:text="Change Contrast"/>
 
 </RelativeLayout>
