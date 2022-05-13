@@ -18,6 +18,10 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 
+import com.example.matrixphotoeditor.simple_effects.BrightnessEffect;
+import com.example.matrixphotoeditor.simple_effects.ContrastEffect;
+import com.example.matrixphotoeditor.simple_effects.SimpleEffect;
+
 public class SimpleEffectActivity extends AppCompatActivity {
     static final String BRIGHTNESS = "Brightness";
     static final String CONTRAST = "Contrast";
@@ -27,7 +31,8 @@ public class SimpleEffectActivity extends AppCompatActivity {
     private SeekBar seekBar;
     private ActionBar actionBar;
     private ColorMatrix globalMatrix;
-    private int preValue = 0;
+    private SimpleEffect thisEffect;
+    private int value, preValue = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,81 +53,39 @@ public class SimpleEffectActivity extends AppCompatActivity {
         userImage.setColorFilter(new ColorMatrixColorFilter(globalMatrix));
         chooseEffect(intent.getStringExtra(EFFECT));
 
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                value = i - preValue;
+                applyMatrix(thisEffect.getEffectMatrix(value));
+                preValue = value;
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+
     }
 
-    void chooseEffect(String effect) {
-        switch (effect) {
+    void chooseEffect(String effectName) {
+        switch (effectName) {
             case BRIGHTNESS:
                 actionBar.setTitle(BRIGHTNESS);
-                seekbarForBright();
+                thisEffect = new BrightnessEffect();
                 break;
             case CONTRAST:
                 actionBar.setTitle(CONTRAST);
-                seekbarForContrast();
+                thisEffect = new ContrastEffect();
         }
     }
 
-    void seekbarForBright() {
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                changeBrightness(i);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {}
-        });
-    }
-
-    void seekbarForContrast() {
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                changeContrast(i);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {}
-        });
-    }
-
-    void changeBrightness(int value) {
-        float f = value - preValue;
-        float[] brightnessMatrix =
-                {1, 0, 0, 0, f,
-                 0, 1, 0, 0, f,
-                 0, 0, 1, 0, f,
-                 0, 0, 0, 1, 0 };
-        globalMatrix.postConcat(new ColorMatrix(brightnessMatrix));
+    void applyMatrix(ColorMatrix matrix) {
+        globalMatrix.postConcat(matrix);
         userImage.setColorFilter(new ColorMatrixColorFilter(globalMatrix));
-        preValue = value;
     }
-
-    void changeContrast(int value) {
-        float f = value - preValue;
-        f = (259 * (f + 255)) / (255 * (259 - f));
-        float[] contrastStep1 =
-                {f, 0, 0, 0, -128,
-                 0, f, 0, 0, -128,
-                 0, 0, f, 0, -128,
-                 0, 0, 0, 1, 0 };
-        float[] contrastStep2 =
-                {1, 0, 0, 0, 128,
-                 0, 1, 0, 0, 128,
-                 0, 0, 1, 0, 128,
-                 0, 0, 0, 1, 0 };
-        globalMatrix.postConcat(new ColorMatrix(contrastStep1));
-        globalMatrix.postConcat(new ColorMatrix(contrastStep2));
-        userImage.setColorFilter(new ColorMatrixColorFilter(globalMatrix));
-        preValue = value;
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
