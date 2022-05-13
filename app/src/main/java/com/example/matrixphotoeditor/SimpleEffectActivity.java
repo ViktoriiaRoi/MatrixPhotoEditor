@@ -20,19 +20,21 @@ import android.widget.SeekBar;
 
 import com.example.matrixphotoeditor.simple_effects.BrightnessEffect;
 import com.example.matrixphotoeditor.simple_effects.ContrastEffect;
+import com.example.matrixphotoeditor.simple_effects.SaturationMatrix;
 import com.example.matrixphotoeditor.simple_effects.SimpleEffect;
 
 public class SimpleEffectActivity extends AppCompatActivity {
     static final String BRIGHTNESS = "Brightness";
     static final String CONTRAST = "Contrast";
+    static final String SATURATION = "Saturation";
 
     private Uri imageUri;
     private ImageView userImage;
     private SeekBar seekBar;
     private ActionBar actionBar;
-    private ColorMatrix globalMatrix;
+    private ColorMatrix initialMatrix, resultMatrix;
     private SimpleEffect thisEffect;
-    private int value, preValue = 0;
+    private int diffValue, preValue = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,16 +51,14 @@ public class SimpleEffectActivity extends AppCompatActivity {
         Intent intent = getIntent();
         imageUri = intent.getData();
         userImage.setImageURI(imageUri);
-        globalMatrix = new ColorMatrix(intent.getFloatArrayExtra(MATRIX));
-        userImage.setColorFilter(new ColorMatrixColorFilter(globalMatrix));
+        initialMatrix = new ColorMatrix(intent.getFloatArrayExtra(MATRIX));
+        userImage.setColorFilter(new ColorMatrixColorFilter(initialMatrix));
         chooseEffect(intent.getStringExtra(EFFECT));
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                value = i - preValue;
-                applyMatrix(thisEffect.getEffectMatrix(value));
-                preValue = value;
+                applyMatrix(thisEffect.getEffectMatrix(i));
             }
 
             @Override
@@ -71,20 +71,23 @@ public class SimpleEffectActivity extends AppCompatActivity {
     }
 
     void chooseEffect(String effectName) {
+        actionBar.setTitle(effectName);
         switch (effectName) {
             case BRIGHTNESS:
-                actionBar.setTitle(BRIGHTNESS);
                 thisEffect = new BrightnessEffect();
                 break;
             case CONTRAST:
-                actionBar.setTitle(CONTRAST);
                 thisEffect = new ContrastEffect();
+                break;
+            case SATURATION:
+                thisEffect = new SaturationMatrix();
         }
     }
 
     void applyMatrix(ColorMatrix matrix) {
-        globalMatrix.postConcat(matrix);
-        userImage.setColorFilter(new ColorMatrixColorFilter(globalMatrix));
+        resultMatrix = new ColorMatrix(initialMatrix);
+        resultMatrix.postConcat(matrix);
+        userImage.setColorFilter(new ColorMatrixColorFilter(resultMatrix));
     }
 
     @Override
@@ -108,7 +111,7 @@ public class SimpleEffectActivity extends AppCompatActivity {
 
     private void saveChanges() {
         Intent intent = new Intent();
-        intent.putExtra(MATRIX, globalMatrix.getArray());
+        intent.putExtra(MATRIX, resultMatrix.getArray());
         setResult(RESULT_OK, intent);
         finish();
     }

@@ -3,6 +3,7 @@ package com.example.matrixphotoeditor;
 import static com.example.matrixphotoeditor.DeblurActivity.BYTE_ARRAY;
 import static com.example.matrixphotoeditor.SimpleEffectActivity.BRIGHTNESS;
 import static com.example.matrixphotoeditor.SimpleEffectActivity.CONTRAST;
+import static com.example.matrixphotoeditor.SimpleEffectActivity.SATURATION;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -28,7 +29,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
 
     private Uri imageUri;
     private ImageView userImage;
-    private Button brightBtn, contrastBtn, deblurBtn;
+    private Button brightBtn, contrastBtn, saturationBtn, deblurBtn;
     private ActionBar actionBar;
     private ColorMatrix globalMatrix;
 
@@ -48,11 +49,13 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         userImage = findViewById(R.id.user_image);
         brightBtn = findViewById(R.id.bright_btn);
         contrastBtn = findViewById(R.id.contrast_btn);
+        saturationBtn = findViewById(R.id.saturation_btn);
         deblurBtn = findViewById(R.id.deblur_btn);
 
         brightBtn.setOnClickListener(this);
         contrastBtn.setOnClickListener(this);
         deblurBtn.setOnClickListener(this);
+        saturationBtn.setOnClickListener(this);
 
         imageUri = getIntent().getData();
         userImage.setImageURI(imageUri);
@@ -66,6 +69,9 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.contrast_btn:
                 startSimpleEffect(CONTRAST);
+                break;
+            case R.id.saturation_btn:
+                startSimpleEffect(SATURATION);
                 break;
             case R.id.deblur_btn:
                 startDeblurEffect();
