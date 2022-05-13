@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MatrixPhotoEditor">
         <activity
+            android:name=".DeblurActivity"
+            android:exported="false" />
+        <activity
             android:name=".SimpleEffectActivity"
             android:exported="false" />
         <activity

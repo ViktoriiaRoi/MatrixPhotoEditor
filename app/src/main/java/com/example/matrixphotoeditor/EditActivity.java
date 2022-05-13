@@ -1,15 +1,16 @@
 package com.example.matrixphotoeditor;
 
+import static com.example.matrixphotoeditor.DeblurActivity.BYTE_ARRAY;
 import static com.example.matrixphotoeditor.SimpleEffectActivity.BRIGHTNESS;
 import static com.example.matrixphotoeditor.SimpleEffectActivity.CONTRAST;
-import static com.example.matrixphotoeditor.SimpleEffectActivity.EFFECT;
-import static com.example.matrixphotoeditor.SimpleEffectActivity.MATRIX;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.net.Uri;
@@ -22,14 +23,17 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 public class EditActivity extends AppCompatActivity implements View.OnClickListener {
+    static final String MATRIX = "Matrix";
+    static final String EFFECT = "Effect";
 
     private Uri imageUri;
     private ImageView userImage;
-    private Button brightBtn, contrastBtn;
+    private Button brightBtn, contrastBtn, deblurBtn;
     private ActionBar actionBar;
     private ColorMatrix globalMatrix;
 
-    private final int APPLY_EFFECT = 100;
+    private final int SIMPLE_EFFECT = 1;
+    private final int DEBLUR_EFFECT = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,40 +48,60 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         userImage = findViewById(R.id.user_image);
         brightBtn = findViewById(R.id.bright_btn);
         contrastBtn = findViewById(R.id.contrast_btn);
+        deblurBtn = findViewById(R.id.deblur_btn);
+
+        brightBtn.setOnClickListener(this);
+        contrastBtn.setOnClickListener(this);
+        deblurBtn.setOnClickListener(this);
 
         imageUri = getIntent().getData();
         userImage.setImageURI(imageUri);
         globalMatrix = new ColorMatrix();
-
-        brightBtn.setOnClickListener(this);
-        contrastBtn.setOnClickListener(this);
     }
 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bright_btn:
-                startEffectActivity(BRIGHTNESS);
+                startSimpleEffect(BRIGHTNESS);
                 break;
             case R.id.contrast_btn:
-                startEffectActivity(CONTRAST);
+                startSimpleEffect(CONTRAST);
+                break;
+            case R.id.deblur_btn:
+                startDeblurEffect();
         }
     }
 
-    private void startEffectActivity(String effect) {
+
+    private void startSimpleEffect(String effect) {
         Intent intent = new Intent(this, SimpleEffectActivity.class);
         intent.putExtra(EFFECT, effect);
         intent.putExtra(MATRIX, globalMatrix.getArray());
         intent.setData(imageUri);
-        startActivityForResult(intent, APPLY_EFFECT);
+        startActivityForResult(intent, SIMPLE_EFFECT);
+    }
+
+    private void startDeblurEffect() {
+        Intent intent = new Intent(this, DeblurActivity.class);
+        intent.putExtra(MATRIX, globalMatrix.getArray());
+        intent.setData(imageUri);
+        startActivityForResult(intent, DEBLUR_EFFECT);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK) {
-            if (requestCode == APPLY_EFFECT) {
-                globalMatrix = new ColorMatrix(data.getFloatArrayExtra("Matrix"));
-                userImage.setColorFilter(new ColorMatrixColorFilter(globalMatrix));
+            switch (requestCode) {
+                case SIMPLE_EFFECT:
+                    globalMatrix = new ColorMatrix(data.getFloatArrayExtra(MATRIX));
+                    userImage.setColorFilter(new ColorMatrixColorFilter(globalMatrix));
+                    break;
+
+                case DEBLUR_EFFECT:
+                    byte[] byteArray = data.getByteArrayExtra(BYTE_ARRAY);
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+                    userImage.setImageBitmap(bitmap);
             }
         }
     }

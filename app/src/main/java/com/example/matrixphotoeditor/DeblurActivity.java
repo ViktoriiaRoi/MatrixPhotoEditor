@@ -1,6 +1,5 @@
 package com.example.matrixphotoeditor;
 
-import static com.example.matrixphotoeditor.EditActivity.EFFECT;
 import static com.example.matrixphotoeditor.EditActivity.MATRIX;
 
 import androidx.annotation.NonNull;
@@ -8,8 +7,10 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
@@ -18,21 +19,22 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 
-public class SimpleEffectActivity extends AppCompatActivity {
-    static final String BRIGHTNESS = "Brightness";
-    static final String CONTRAST = "Contrast";
+import java.io.ByteArrayOutputStream;
+
+public class DeblurActivity extends AppCompatActivity {
+    static final String BYTE_ARRAY = "ByteArray";
 
     private Uri imageUri;
     private ImageView userImage;
+    private Bitmap initialBitmap, resultBitmap;
     private SeekBar seekBar;
     private ActionBar actionBar;
     private ColorMatrix globalMatrix;
-    private int preValue = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_simple_effect);
+        setContentView(R.layout.activity_deblur);
 
         actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -46,27 +48,13 @@ public class SimpleEffectActivity extends AppCompatActivity {
         userImage.setImageURI(imageUri);
         globalMatrix = new ColorMatrix(intent.getFloatArrayExtra(MATRIX));
         userImage.setColorFilter(new ColorMatrixColorFilter(globalMatrix));
-        chooseEffect(intent.getStringExtra(EFFECT));
+        initialBitmap = getImageBitmap();
+        resultBitmap = initialBitmap;
 
-    }
-
-    void chooseEffect(String effect) {
-        switch (effect) {
-            case BRIGHTNESS:
-                actionBar.setTitle(BRIGHTNESS);
-                seekbarForBright();
-                break;
-            case CONTRAST:
-                actionBar.setTitle(CONTRAST);
-                seekbarForContrast();
-        }
-    }
-
-    void seekbarForBright() {
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                changeBrightness(i);
+                applyDeblur(i);
             }
 
             @Override
@@ -77,52 +65,15 @@ public class SimpleEffectActivity extends AppCompatActivity {
         });
     }
 
-    void seekbarForContrast() {
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                changeContrast(i);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {}
-        });
+    private Bitmap getImageBitmap() {
+        userImage.invalidate();
+        BitmapDrawable drawable = (BitmapDrawable) userImage.getDrawable();
+        Bitmap bitmap = drawable.getBitmap();
+        return bitmap;
     }
 
-    void changeBrightness(int value) {
-        float f = value - preValue;
-        float[] brightnessMatrix =
-                {1, 0, 0, 0, f,
-                 0, 1, 0, 0, f,
-                 0, 0, 1, 0, f,
-                 0, 0, 0, 1, 0 };
-        globalMatrix.postConcat(new ColorMatrix(brightnessMatrix));
-        userImage.setColorFilter(new ColorMatrixColorFilter(globalMatrix));
-        preValue = value;
+    private void applyDeblur(int n) {
     }
-
-    void changeContrast(int value) {
-        float f = value - preValue;
-        f = (259 * (f + 255)) / (255 * (259 - f));
-        float[] contrastStep1 =
-                {f, 0, 0, 0, -128,
-                 0, f, 0, 0, -128,
-                 0, 0, f, 0, -128,
-                 0, 0, 0, 1, 0 };
-        float[] contrastStep2 =
-                {1, 0, 0, 0, 128,
-                 0, 1, 0, 0, 128,
-                 0, 0, 1, 0, 128,
-                 0, 0, 0, 1, 0 };
-        globalMatrix.postConcat(new ColorMatrix(contrastStep1));
-        globalMatrix.postConcat(new ColorMatrix(contrastStep2));
-        userImage.setColorFilter(new ColorMatrixColorFilter(globalMatrix));
-        preValue = value;
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -144,10 +95,14 @@ public class SimpleEffectActivity extends AppCompatActivity {
     }
 
     private void saveChanges() {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        resultBitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
+        byte[] byteArray = stream.toByteArray();
+
         Intent intent = new Intent();
-        intent.putExtra(MATRIX, globalMatrix.getArray());
+        intent.putExtra(BYTE_ARRAY, byteArray);
+
         setResult(RESULT_OK, intent);
         finish();
     }
-
 }

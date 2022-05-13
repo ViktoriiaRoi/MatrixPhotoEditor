@@ -11,23 +11,37 @@
         android:layout_width="match_parent"
         android:layout_height="500dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp"/>
+        android:layout_marginTop="100dp" />
 
-    <Button
-        android:id="@+id/bright_btn"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginVertical="40dp"
-        android:text="Change Brightness"/>
+        android:orientation="horizontal"
+        android:layout_marginVertical="30dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true">
 
-    <Button
-        android:id="@+id/contrast_btn"
-        android:layout_alignParentRight="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginVertical="40dp"
-        android:text="Change Contrast"/>
+        <Button
+            android:id="@+id/bright_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="10dp"
+            android:text="Brightness"/>
+
+        <Button
+            android:id="@+id/contrast_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="5dp"
+            android:text="Contrast"/>
+
+        <Button
+            android:id="@+id/deblur_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="10dp"
+            android:text="Deblur"/>
+
+    </LinearLayout>
 
 </RelativeLayout>
