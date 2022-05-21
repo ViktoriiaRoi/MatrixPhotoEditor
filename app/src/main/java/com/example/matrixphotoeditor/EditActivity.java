@@ -27,39 +27,41 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
     static final String MATRIX = "Matrix";
     static final String EFFECT = "Effect";
 
-    private Uri imageUri;
-    private ImageView userImage;
-    private Button brightBtn, contrastBtn, saturationBtn, deblurBtn;
-    private ActionBar actionBar;
-    private ColorMatrix globalMatrix;
-
     private final int SIMPLE_EFFECT = 1;
     private final int DEBLUR_EFFECT = 2;
+
+    private Uri imageUri;
+    private ImageView userImage;
+    private ColorMatrix globalMatrix;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
 
-        actionBar = getSupportActionBar();
+        ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setTitle("Edit photo");
 
         userImage = findViewById(R.id.user_image);
-        brightBtn = findViewById(R.id.bright_btn);
-        contrastBtn = findViewById(R.id.contrast_btn);
-        saturationBtn = findViewById(R.id.saturation_btn);
-        deblurBtn = findViewById(R.id.deblur_btn);
+        imageUri = getIntent().getData();
+        userImage.setImageURI(imageUri);
+        globalMatrix = new ColorMatrix();
+
+        initializeButtons();
+    }
+
+    private void initializeButtons() {
+        Button brightBtn = findViewById(R.id.bright_btn);
+        Button contrastBtn = findViewById(R.id.contrast_btn);
+        Button saturationBtn = findViewById(R.id.saturation_btn);
+        Button deblurBtn = findViewById(R.id.deblur_btn);
 
         brightBtn.setOnClickListener(this);
         contrastBtn.setOnClickListener(this);
         deblurBtn.setOnClickListener(this);
         saturationBtn.setOnClickListener(this);
-
-        imageUri = getIntent().getData();
-        userImage.setImageURI(imageUri);
-        globalMatrix = new ColorMatrix();
     }
 
     public void onClick(View v) {
@@ -78,7 +80,6 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-
     private void startSimpleEffect(String effect) {
         Intent intent = new Intent(this, SimpleEffectActivity.class);
         intent.putExtra(EFFECT, effect);
@@ -96,7 +97,6 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case SIMPLE_EFFECT:

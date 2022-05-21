@@ -9,15 +9,14 @@ import android.view.View;
 import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
-    private Button selectBtn;
-    private int SELECT_PICTURE = 200;
+    private final int SELECT_PICTURE = 200;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        selectBtn = findViewById(R.id.select_btn);
+        Button selectBtn = findViewById(R.id.select_btn);
         selectBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

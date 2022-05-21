@@ -24,30 +24,26 @@ import java.io.ByteArrayOutputStream;
 public class DeblurActivity extends AppCompatActivity {
     static final String BYTE_ARRAY = "ByteArray";
 
-    private Uri imageUri;
     private ImageView userImage;
     private Bitmap initialBitmap, resultBitmap;
-    private SeekBar seekBar;
-    private ActionBar actionBar;
-    private ColorMatrix globalMatrix;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_deblur);
 
-        actionBar = getSupportActionBar();
+        ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
 
         userImage = findViewById(R.id.user_image);
-        seekBar = findViewById(R.id.seek_bar);
+        SeekBar seekBar = findViewById(R.id.seek_bar);
 
         Intent intent = getIntent();
-        imageUri = intent.getData();
+        Uri imageUri = intent.getData();
         userImage.setImageURI(imageUri);
-        globalMatrix = new ColorMatrix(intent.getFloatArrayExtra(MATRIX));
-        userImage.setColorFilter(new ColorMatrixColorFilter(globalMatrix));
+        ColorMatrix initialMatrix = new ColorMatrix(intent.getFloatArrayExtra(MATRIX));
+        userImage.setColorFilter(new ColorMatrixColorFilter(initialMatrix));
         initialBitmap = getImageBitmap();
         resultBitmap = initialBitmap;
 
@@ -68,11 +64,22 @@ public class DeblurActivity extends AppCompatActivity {
     private Bitmap getImageBitmap() {
         userImage.invalidate();
         BitmapDrawable drawable = (BitmapDrawable) userImage.getDrawable();
-        Bitmap bitmap = drawable.getBitmap();
-        return bitmap;
+        return drawable.getBitmap();
     }
 
     private void applyDeblur(int n) {
+    }
+
+    private void saveChanges() {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        resultBitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
+        byte[] byteArray = stream.toByteArray();
+
+        Intent intent = new Intent();
+        intent.putExtra(BYTE_ARRAY, byteArray);
+
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     @Override
@@ -92,17 +99,5 @@ public class DeblurActivity extends AppCompatActivity {
                 finish();
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void saveChanges() {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        resultBitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
-        byte[] byteArray = stream.toByteArray();
-
-        Intent intent = new Intent();
-        intent.putExtra(BYTE_ARRAY, byteArray);
-
-        setResult(RESULT_OK, intent);
-        finish();
     }
 }

@@ -28,13 +28,10 @@ public class SimpleEffectActivity extends AppCompatActivity {
     static final String CONTRAST = "Contrast";
     static final String SATURATION = "Saturation";
 
-    private Uri imageUri;
     private ImageView userImage;
-    private SeekBar seekBar;
     private ActionBar actionBar;
     private ColorMatrix initialMatrix, resultMatrix;
     private SimpleEffect thisEffect;
-    private int diffValue, preValue = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,10 +43,10 @@ public class SimpleEffectActivity extends AppCompatActivity {
         actionBar.setDisplayShowHomeEnabled(true);
 
         userImage = findViewById(R.id.user_image);
-        seekBar = findViewById(R.id.seek_bar);
+        SeekBar seekBar = findViewById(R.id.seek_bar);
 
         Intent intent = getIntent();
-        imageUri = intent.getData();
+        Uri imageUri = intent.getData();
         userImage.setImageURI(imageUri);
         initialMatrix = new ColorMatrix(intent.getFloatArrayExtra(MATRIX));
         userImage.setColorFilter(new ColorMatrixColorFilter(initialMatrix));
@@ -90,6 +87,13 @@ public class SimpleEffectActivity extends AppCompatActivity {
         userImage.setColorFilter(new ColorMatrixColorFilter(resultMatrix));
     }
 
+    void saveChanges() {
+        Intent intent = new Intent();
+        intent.putExtra(MATRIX, resultMatrix.getArray());
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -108,12 +112,4 @@ public class SimpleEffectActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-    private void saveChanges() {
-        Intent intent = new Intent();
-        intent.putExtra(MATRIX, resultMatrix.getArray());
-        setResult(RESULT_OK, intent);
-        finish();
-    }
-
 }
