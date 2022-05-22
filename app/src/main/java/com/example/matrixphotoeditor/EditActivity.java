@@ -1,47 +1,28 @@
 package com.example.matrixphotoeditor;
 
-import static com.example.matrixphotoeditor.DeblurActivity.BYTE_ARRAY;
-import static com.example.matrixphotoeditor.SimpleEffectActivity.BRIGHTNESS;
-import static com.example.matrixphotoeditor.SimpleEffectActivity.CONTRAST;
-import static com.example.matrixphotoeditor.SimpleEffectActivity.SATURATION;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.ContentResolver;
-import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
-import android.graphics.Paint;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class EditActivity extends AppCompatActivity implements View.OnClickListener {
     static final String MATRIX = "Matrix";
     static final String EFFECT = "Effect";
     static final String BITMAP_ARRAY = "Bitmap";
+
+    static final String BRIGHTNESS = "Brightness";
+    static final String CONTRAST = "Contrast";
+    static final String SATURATION = "Saturation";
 
     private final int SIMPLE_EFFECT = 1;
     private final int DEBLUR_EFFECT = 2;
@@ -116,7 +97,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
                     break;
 
                 case DEBLUR_EFFECT:
-                    byte[] byteArray = data.getByteArrayExtra(BYTE_ARRAY);
+                    //TODO
             }
         }
     }

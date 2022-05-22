@@ -1,18 +1,6 @@
 package com.example.matrixphotoeditor;
 
-import static com.example.matrixphotoeditor.EditActivity.BITMAP_ARRAY;
-import static com.example.matrixphotoeditor.EditActivity.MATRIX;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
-import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,10 +8,12 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 
-import java.io.ByteArrayOutputStream;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class DeblurActivity extends AppCompatActivity {
-    static final String BYTE_ARRAY = "ByteArray";
+    static final String BITMAP_ARRAY = "Bitmap";
 
     private ImageView userImage;
     private Bitmap initialBitmap, resultBitmap;
@@ -41,7 +31,7 @@ public class DeblurActivity extends AppCompatActivity {
         userImage = findViewById(R.id.user_image);
         SeekBar seekBar = findViewById(R.id.seek_bar);
 
-        MatrixImage matrixImage = new MatrixImage(userImage, getIntent().getByteArrayExtra(BITMAP_ARRAY));
+        matrixImage = new MatrixImage(userImage, getIntent().getByteArrayExtra(BITMAP_ARRAY));
 
         initialBitmap = matrixImage.getCurrentBitmap();
         resultBitmap = initialBitmap;

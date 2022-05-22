@@ -17,12 +17,11 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 
 public class MatrixImage {
-    private ImageView imageView;
+    private final ImageView imageView;
     private Bitmap bitmap;
 
     private MatrixImage(ImageView imageView) {

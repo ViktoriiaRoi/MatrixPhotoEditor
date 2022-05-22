@@ -1,16 +1,8 @@
 package com.example.matrixphotoeditor;
 
-import static com.example.matrixphotoeditor.EditActivity.EFFECT;
-import static com.example.matrixphotoeditor.EditActivity.MATRIX;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,12 +10,18 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.matrixphotoeditor.simple_effects.BrightnessEffect;
 import com.example.matrixphotoeditor.simple_effects.ContrastEffect;
 import com.example.matrixphotoeditor.simple_effects.SaturationMatrix;
 import com.example.matrixphotoeditor.simple_effects.SimpleEffect;
 
 public class SimpleEffectActivity extends AppCompatActivity {
+    static final String MATRIX = "Matrix";
+    static final String EFFECT = "Effect";
     static final String BITMAP_ARRAY = "Bitmap";
 
     static final String BRIGHTNESS = "Brightness";
@@ -55,7 +53,7 @@ public class SimpleEffectActivity extends AppCompatActivity {
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                applyMatrix(thisEffect.getEffectMatrix(i));
+                previewFilter(thisEffect.getEffectMatrix(i));
             }
 
             @Override
@@ -66,7 +64,7 @@ public class SimpleEffectActivity extends AppCompatActivity {
         });
     }
 
-    void chooseEffect(String effectName) {
+    private void chooseEffect(String effectName) {
         actionBar.setTitle(effectName);
         switch (effectName) {
             case BRIGHTNESS:
@@ -80,12 +78,12 @@ public class SimpleEffectActivity extends AppCompatActivity {
         }
     }
 
-    void applyMatrix(ColorMatrix matrix) {
+    private void previewFilter(ColorMatrix matrix) {
         userImage.setColorFilter(new ColorMatrixColorFilter(matrix));
         filterMatrix = matrix;
     }
 
-    void saveChanges() {
+    private void saveFilter() {
         Intent intent = new Intent();
         intent.putExtra(MATRIX, filterMatrix.getArray());
         setResult(RESULT_OK, intent);
@@ -103,7 +101,7 @@ public class SimpleEffectActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.apply_btn:
-                saveChanges();
+                saveFilter();
                 break;
             case android.R.id.home:
                 finish();
