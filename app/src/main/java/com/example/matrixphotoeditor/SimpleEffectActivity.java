@@ -24,13 +24,15 @@ import com.example.matrixphotoeditor.simple_effects.SaturationMatrix;
 import com.example.matrixphotoeditor.simple_effects.SimpleEffect;
 
 public class SimpleEffectActivity extends AppCompatActivity {
+    static final String BITMAP_ARRAY = "Bitmap";
+
     static final String BRIGHTNESS = "Brightness";
     static final String CONTRAST = "Contrast";
     static final String SATURATION = "Saturation";
 
     private ImageView userImage;
     private ActionBar actionBar;
-    private ColorMatrix initialMatrix, resultMatrix;
+    private ColorMatrix filterMatrix;
     private SimpleEffect thisEffect;
 
     @Override
@@ -42,14 +44,12 @@ public class SimpleEffectActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
 
+        Intent intent = getIntent();
+
         userImage = findViewById(R.id.user_image);
         SeekBar seekBar = findViewById(R.id.seek_bar);
 
-        Intent intent = getIntent();
-        Uri imageUri = intent.getData();
-        userImage.setImageURI(imageUri);
-        initialMatrix = new ColorMatrix(intent.getFloatArrayExtra(MATRIX));
-        userImage.setColorFilter(new ColorMatrixColorFilter(initialMatrix));
+        new MatrixImage(userImage, intent.getByteArrayExtra(BITMAP_ARRAY));
         chooseEffect(intent.getStringExtra(EFFECT));
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -64,7 +64,6 @@ public class SimpleEffectActivity extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {}
         });
-
     }
 
     void chooseEffect(String effectName) {
@@ -82,14 +81,13 @@ public class SimpleEffectActivity extends AppCompatActivity {
     }
 
     void applyMatrix(ColorMatrix matrix) {
-        resultMatrix = new ColorMatrix(initialMatrix);
-        resultMatrix.postConcat(matrix);
-        userImage.setColorFilter(new ColorMatrixColorFilter(resultMatrix));
+        userImage.setColorFilter(new ColorMatrixColorFilter(matrix));
+        filterMatrix = matrix;
     }
 
     void saveChanges() {
         Intent intent = new Intent();
-        intent.putExtra(MATRIX, resultMatrix.getArray());
+        intent.putExtra(MATRIX, filterMatrix.getArray());
         setResult(RESULT_OK, intent);
         finish();
     }

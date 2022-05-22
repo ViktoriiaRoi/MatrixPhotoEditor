@@ -1,5 +1,6 @@
 package com.example.matrixphotoeditor;
 
+import static com.example.matrixphotoeditor.EditActivity.BITMAP_ARRAY;
 import static com.example.matrixphotoeditor.EditActivity.MATRIX;
 
 import androidx.annotation.NonNull;
@@ -26,6 +27,7 @@ public class DeblurActivity extends AppCompatActivity {
 
     private ImageView userImage;
     private Bitmap initialBitmap, resultBitmap;
+    private MatrixImage matrixImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,12 +41,9 @@ public class DeblurActivity extends AppCompatActivity {
         userImage = findViewById(R.id.user_image);
         SeekBar seekBar = findViewById(R.id.seek_bar);
 
-        Intent intent = getIntent();
-        Uri imageUri = intent.getData();
-        userImage.setImageURI(imageUri);
-        ColorMatrix initialMatrix = new ColorMatrix(intent.getFloatArrayExtra(MATRIX));
-        userImage.setColorFilter(new ColorMatrixColorFilter(initialMatrix));
-        initialBitmap = getImageBitmap();
+        MatrixImage matrixImage = new MatrixImage(userImage, getIntent().getByteArrayExtra(BITMAP_ARRAY));
+
+        initialBitmap = matrixImage.getCurrentBitmap();
         resultBitmap = initialBitmap;
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -61,25 +60,11 @@ public class DeblurActivity extends AppCompatActivity {
         });
     }
 
-    private Bitmap getImageBitmap() {
-        userImage.invalidate();
-        BitmapDrawable drawable = (BitmapDrawable) userImage.getDrawable();
-        return drawable.getBitmap();
-    }
-
     private void applyDeblur(int n) {
     }
 
     private void saveChanges() {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        resultBitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
-        byte[] byteArray = stream.toByteArray();
-
-        Intent intent = new Intent();
-        intent.putExtra(BYTE_ARRAY, byteArray);
-
-        setResult(RESULT_OK, intent);
-        finish();
+        //TODO
     }
 
     @Override
