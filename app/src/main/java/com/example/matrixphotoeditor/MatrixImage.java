@@ -23,6 +23,7 @@ import java.io.OutputStream;
 public class MatrixImage {
     private final ImageView imageView;
     private Bitmap bitmap;
+    private final int MAX_SIZE = 1000;
 
     private MatrixImage(ImageView imageView) {
         this.imageView = imageView;
@@ -31,7 +32,19 @@ public class MatrixImage {
     public MatrixImage(ImageView view, Uri uri) {
         this(view);
         view.setImageURI(uri);
-        this.bitmap = getCurrentBitmap();
+        Bitmap originalBitmap = getCurrentBitmap();
+        int width = originalBitmap.getWidth();
+        int height = originalBitmap.getHeight();
+
+        if (width > MAX_SIZE && width > height) {
+            height = (MAX_SIZE * height) / width;
+            width = MAX_SIZE;
+        } else if (height > MAX_SIZE) {
+            width = (MAX_SIZE * width) / height;
+            height = MAX_SIZE;
+        }
+
+        this.bitmap = Bitmap.createScaledBitmap(originalBitmap, width, height, true);
     }
 
     public MatrixImage(ImageView view, byte[] byteArray) {
