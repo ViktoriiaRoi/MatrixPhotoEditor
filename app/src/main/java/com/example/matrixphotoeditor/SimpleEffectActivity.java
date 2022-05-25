@@ -1,16 +1,8 @@
 package com.example.matrixphotoeditor;
 
-import static com.example.matrixphotoeditor.EditActivity.EFFECT;
-import static com.example.matrixphotoeditor.EditActivity.MATRIX;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,16 +10,28 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.matrixphotoeditor.simple_effects.BrightnessEffect;
+import com.example.matrixphotoeditor.simple_effects.ContrastEffect;
+import com.example.matrixphotoeditor.simple_effects.SaturationMatrix;
+import com.example.matrixphotoeditor.simple_effects.SimpleEffect;
+
 public class SimpleEffectActivity extends AppCompatActivity {
+    static final String MATRIX = "Matrix";
+    static final String EFFECT = "Effect";
+    static final String BITMAP_ARRAY = "Bitmap";
+
     static final String BRIGHTNESS = "Brightness";
     static final String CONTRAST = "Contrast";
+    static final String SATURATION = "Saturation";
 
-    private Uri imageUri;
     private ImageView userImage;
-    private SeekBar seekBar;
     private ActionBar actionBar;
-    private ColorMatrix globalMatrix;
-    private int preValue = 0;
+    private ColorMatrix filterMatrix;
+    private SimpleEffect thisEffect;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,91 +42,53 @@ public class SimpleEffectActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
 
-        userImage = findViewById(R.id.user_image);
-        seekBar = findViewById(R.id.seek_bar);
-
         Intent intent = getIntent();
-        imageUri = intent.getData();
-        userImage.setImageURI(imageUri);
-        globalMatrix = new ColorMatrix(intent.getFloatArrayExtra(MATRIX));
-        userImage.setColorFilter(new ColorMatrixColorFilter(globalMatrix));
+
+        userImage = findViewById(R.id.user_image);
+        SeekBar seekBar = findViewById(R.id.seek_bar);
+
+        new MatrixImage(userImage, intent.getByteArrayExtra(BITMAP_ARRAY));
         chooseEffect(intent.getStringExtra(EFFECT));
 
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                previewFilter(thisEffect.getEffectMatrix(i));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
     }
 
-    void chooseEffect(String effect) {
-        switch (effect) {
+    private void chooseEffect(String effectName) {
+        actionBar.setTitle(effectName);
+        switch (effectName) {
             case BRIGHTNESS:
-                actionBar.setTitle(BRIGHTNESS);
-                seekbarForBright();
+                thisEffect = new BrightnessEffect();
                 break;
             case CONTRAST:
-                actionBar.setTitle(CONTRAST);
-                seekbarForContrast();
+                thisEffect = new ContrastEffect();
+                break;
+            case SATURATION:
+                thisEffect = new SaturationMatrix();
         }
     }
 
-    void seekbarForBright() {
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                changeBrightness(i);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {}
-        });
+    private void previewFilter(ColorMatrix matrix) {
+        userImage.setColorFilter(new ColorMatrixColorFilter(matrix));
+        filterMatrix = matrix;
     }
 
-    void seekbarForContrast() {
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                changeContrast(i);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {}
-        });
+    private void saveFilter() {
+        Intent intent = new Intent();
+        intent.putExtra(MATRIX, filterMatrix.getArray());
+        setResult(RESULT_OK, intent);
+        finish();
     }
-
-    void changeBrightness(int value) {
-        float f = value - preValue;
-        float[] brightnessMatrix =
-                {1, 0, 0, 0, f,
-                 0, 1, 0, 0, f,
-                 0, 0, 1, 0, f,
-                 0, 0, 0, 1, 0 };
-        globalMatrix.postConcat(new ColorMatrix(brightnessMatrix));
-        userImage.setColorFilter(new ColorMatrixColorFilter(globalMatrix));
-        preValue = value;
-    }
-
-    void changeContrast(int value) {
-        float f = value - preValue;
-        f = (259 * (f + 255)) / (255 * (259 - f));
-        float[] contrastStep1 =
-                {f, 0, 0, 0, -128,
-                 0, f, 0, 0, -128,
-                 0, 0, f, 0, -128,
-                 0, 0, 0, 1, 0 };
-        float[] contrastStep2 =
-                {1, 0, 0, 0, 128,
-                 0, 1, 0, 0, 128,
-                 0, 0, 1, 0, 128,
-                 0, 0, 0, 1, 0 };
-        globalMatrix.postConcat(new ColorMatrix(contrastStep1));
-        globalMatrix.postConcat(new ColorMatrix(contrastStep2));
-        userImage.setColorFilter(new ColorMatrixColorFilter(globalMatrix));
-        preValue = value;
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -135,19 +101,11 @@ public class SimpleEffectActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.apply_btn:
-                saveChanges();
+                saveFilter();
                 break;
             case android.R.id.home:
                 finish();
         }
         return super.onOptionsItemSelected(item);
     }
-
-    private void saveChanges() {
-        Intent intent = new Intent();
-        intent.putExtra(MATRIX, globalMatrix.getArray());
-        setResult(RESULT_OK, intent);
-        finish();
-    }
-
 }

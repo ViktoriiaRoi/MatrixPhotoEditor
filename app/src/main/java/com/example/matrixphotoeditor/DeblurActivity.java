@@ -1,12 +1,5 @@
 package com.example.matrixphotoeditor;
 
-import static com.example.matrixphotoeditor.EditActivity.MATRIX;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.ColorMatrix;
@@ -24,37 +17,33 @@ import android.widget.SeekBar;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class DeblurActivity extends AppCompatActivity {
-    static final String BYTE_ARRAY = "ByteArray";
+    static final String BITMAP_ARRAY = "Bitmap";
 
-    private Uri imageUri;
     private ImageView userImage;
     private Bitmap initialBitmap, resultBitmap;
-    private SeekBar seekBar;
-    private ProgressBar progressBar;
-    private ActionBar actionBar;
-    private ColorMatrix globalMatrix;
+    private MatrixImage matrixImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_deblur);
 
-        actionBar = getSupportActionBar();
+        ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
 
         userImage = findViewById(R.id.user_image);
-        seekBar = findViewById(R.id.seek_bar);
+        SeekBar seekBar = findViewById(R.id.seek_bar);
 
-        Intent intent = getIntent();
-        imageUri = intent.getData();
-        userImage.setImageURI(imageUri);
-        globalMatrix = new ColorMatrix(intent.getFloatArrayExtra(MATRIX));
-        userImage.setColorFilter(new ColorMatrixColorFilter(globalMatrix));
-        initialBitmap = getImageBitmap();
-        resultBitmap = initialBitmap.copy(initialBitmap.getConfig(), true);
+        matrixImage = new MatrixImage(userImage, getIntent().getByteArrayExtra(BITMAP_ARRAY));
+
+        initialBitmap = matrixImage.getCurrentBitmap();
+        resultBitmap = initialBitmap.copy(initialBitmap.getConfig(), true);;
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -70,11 +59,7 @@ public class DeblurActivity extends AppCompatActivity {
         });
     }
 
-    private Bitmap getImageBitmap() {
-        userImage.invalidate();
-        BitmapDrawable drawable = (BitmapDrawable) userImage.getDrawable();
-        Bitmap bitmap = drawable.getBitmap();
-        return bitmap;
+    private void applyDeblur(int n) {
     }
 
     public static int findMedian(ArrayList<Integer> colorArray) {
@@ -165,6 +150,10 @@ public class DeblurActivity extends AppCompatActivity {
             }
         }
         userImage.setImageBitmap(resultBitmap);
+
+    private void saveChanges() {
+        //TODO
+
     }
 
     @Override
@@ -184,17 +173,5 @@ public class DeblurActivity extends AppCompatActivity {
                 finish();
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void saveChanges() {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        resultBitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
-        byte[] byteArray = stream.toByteArray();
-
-        Intent intent = new Intent();
-        intent.putExtra(BYTE_ARRAY, byteArray);
-
-        setResult(RESULT_OK, intent);
-        finish();
     }
 }
