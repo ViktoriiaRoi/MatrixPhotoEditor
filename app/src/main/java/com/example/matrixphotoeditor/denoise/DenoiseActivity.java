@@ -1,32 +1,32 @@
-package com.example.matrixphotoeditor;
+package com.example.matrixphotoeditor.denoise;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
-import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.SeekBar;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class DeblurActivity extends AppCompatActivity {
+import com.example.matrixphotoeditor.MatrixImage;
+import com.example.matrixphotoeditor.R;
+
+public class DenoiseActivity extends AppCompatActivity{
     static final String BITMAP_ARRAY = "Bitmap";
 
-    private ImageView userImage;
     private Bitmap initialBitmap, resultBitmap;
     private MatrixImage matrixImage;
+    private DenoiseEffect thisEffect;
+    private int lastValue = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,18 +37,20 @@ public class DeblurActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
 
-        userImage = findViewById(R.id.user_image);
+        ImageView userImage = findViewById(R.id.user_image);
         SeekBar seekBar = findViewById(R.id.seek_bar);
+        RadioGroup radioGroup = findViewById(R.id.radio_group);
+        RadioButton meanRadio = findViewById(R.id.radio_mean);
 
         matrixImage = new MatrixImage(userImage, getIntent().getByteArrayExtra(BITMAP_ARRAY));
-
-        initialBitmap = matrixImage.getCurrentBitmap();
+        initialBitmap = matrixImage.getBitmap();
         resultBitmap = initialBitmap.copy(initialBitmap.getConfig(), true);;
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 deblurImage(i);
+                lastValue = i;
             }
 
             @Override
@@ -57,20 +59,27 @@ public class DeblurActivity extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {}
         });
+
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+                switch (checkedId) {
+                    case R.id.radio_mean:
+                        thisEffect = new MeanFilter();
+                        break;
+                    case R.id.radio_median:
+                        thisEffect = new MedianFilter();
+                        break;
+                }
+                if (lastValue != 0) {
+                    deblurImage(lastValue);
+                }
+            }
+        });
+        meanRadio.setChecked(true);
     }
 
-    private void applyDeblur(int n) {
-    }
-
-    public static int findMedian(ArrayList<Integer> colorArray) {
-        // O(n logn)
-        Collections.sort(colorArray);
-        int n = colorArray.size();
-        if (n % 2 != 0)
-            return colorArray.get(n / 2);
-        return (colorArray.get((n - 1) / 2) + colorArray.get((n / 2))) / 2;
-    }
-
+    /*
     public int[] getMedianColors(int x, int y, int stepX, int stepY, int n) {
         ArrayList<ArrayList<Integer>> rgbBlockColors = new ArrayList<>(3);
         for(int i = 0; i < 3; i++) {
@@ -93,6 +102,7 @@ public class DeblurActivity extends AppCompatActivity {
         }
         return rgbMeanColors;
     }
+     */
 
     public ArrayList<ArrayList<Integer>> getNeighboringColors(int centerX, int centerY, int n,
                                                               int width, int height) {
@@ -121,39 +131,28 @@ public class DeblurActivity extends AppCompatActivity {
         return rgbBlockColors;
     }
 
-    public int applyMeanKernel(int n, ArrayList<Integer> colorArray) {
-        int convolution = 0;
-        for (Integer color : colorArray) {
-            convolution += color;
-        }
-        convolution /= n * n;
-        return convolution;
-    }
-
     public void deblurImage(int n) {
         int width = initialBitmap.getWidth();
         int height = initialBitmap.getHeight();
 
-        n = 3;
-
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 ArrayList<ArrayList<Integer>> neighboringRGB = getNeighboringColors(x, y, n, width, height);
-                int []colors = new int[3];
-//                for (int i = 0; i < 3; i++) {
-//                    colors[i] = findMedian(neighboringRGB.get(i));
-//                }
-                for (int i = 0; i < colors.length; i++) {
-                    colors[i] = applyMeanKernel(n, neighboringRGB.get(i));
+                int[] colors = new int[3];
+                for (int i = 0; i < 3; i++) {
+                    colors[i] = thisEffect.applyFilter(n, neighboringRGB.get(i));
                 }
                 resultBitmap.setPixel(x, y, Color.rgb(colors[0], colors[1], colors[2]));
             }
         }
-        userImage.setImageBitmap(resultBitmap);
+        matrixImage.setBitmap(resultBitmap);
+    }
 
     private void saveChanges() {
-        //TODO
-
+        Intent intent = new Intent();
+        intent.putExtra(BITMAP_ARRAY, matrixImage.getBitmapArray());
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     @Override

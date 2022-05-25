@@ -32,7 +32,10 @@ public class MatrixImage {
     public MatrixImage(ImageView view, Uri uri) {
         this(view);
         view.setImageURI(uri);
-        Bitmap originalBitmap = getCurrentBitmap();
+
+        BitmapDrawable bitmapDrawable = (BitmapDrawable) imageView.getDrawable();
+        Bitmap originalBitmap = bitmapDrawable.getBitmap();
+
         int width = originalBitmap.getWidth();
         int height = originalBitmap.getHeight();
 
@@ -49,8 +52,7 @@ public class MatrixImage {
 
     public MatrixImage(ImageView view, byte[] byteArray) {
         this(view);
-        bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-        imageView.setImageBitmap(bitmap);
+        setBitmapArray(byteArray);
     }
 
     public byte[] getBitmapArray() {
@@ -59,9 +61,18 @@ public class MatrixImage {
         return stream.toByteArray();
     }
 
-    public Bitmap getCurrentBitmap() {
-        BitmapDrawable bitmapDrawable = (BitmapDrawable) imageView.getDrawable();
-        return bitmapDrawable.getBitmap();
+    public Bitmap getBitmap() {
+        return this.bitmap;
+    }
+
+    public void setBitmapArray(byte[] byteArray) {
+        Bitmap newBitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+        setBitmap(newBitmap);
+    }
+
+    public void setBitmap(Bitmap newBitmap) {
+        this.bitmap = newBitmap;
+        imageView.setImageBitmap(newBitmap);
     }
 
     public void applyFilter(ColorMatrix colorMatrix) {

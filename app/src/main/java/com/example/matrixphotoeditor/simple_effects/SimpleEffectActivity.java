@@ -1,4 +1,4 @@
-package com.example.matrixphotoeditor;
+package com.example.matrixphotoeditor.simple_effects;
 
 import android.content.Intent;
 import android.graphics.ColorMatrix;
@@ -14,6 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.matrixphotoeditor.MatrixImage;
+import com.example.matrixphotoeditor.R;
 import com.example.matrixphotoeditor.simple_effects.BrightnessEffect;
 import com.example.matrixphotoeditor.simple_effects.ContrastEffect;
 import com.example.matrixphotoeditor.simple_effects.SaturationMatrix;

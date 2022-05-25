@@ -15,6 +15,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.matrixphotoeditor.denoise.DenoiseActivity;
+import com.example.matrixphotoeditor.simple_effects.SimpleEffectActivity;
+
 public class EditActivity extends AppCompatActivity implements View.OnClickListener {
     static final String MATRIX = "Matrix";
     static final String EFFECT = "Effect";
@@ -82,7 +85,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void startDeblurEffect() {
-        Intent intent = new Intent(this, DeblurActivity.class);
+        Intent intent = new Intent(this, DenoiseActivity.class);
         intent.putExtra(BITMAP_ARRAY, matrixImage.getBitmapArray());
         startActivityForResult(intent, DEBLUR_EFFECT);
     }
@@ -97,7 +100,8 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
                     break;
 
                 case DEBLUR_EFFECT:
-                    //TODO
+                    matrixImage.setBitmapArray(data.getByteArrayExtra(BITMAP_ARRAY));
+                    break;
             }
         }
     }

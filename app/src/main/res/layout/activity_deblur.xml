@@ -4,14 +4,37 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DeblurActivity">
+    tools:context=".denoise.DenoiseActivity">
 
     <ImageView
         android:id="@+id/user_image"
         android:layout_width="match_parent"
         android:layout_height="500dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp"/>
+        android:layout_marginTop="100dp" />
+
+    <RadioGroup
+        android:id="@+id/radio_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_above="@id/seek_bar"
+        android:layout_marginBottom="16dp">
+
+        <RadioButton android:id="@+id/radio_mean"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:text="Mean"/>
+
+        <RadioButton android:id="@+id/radio_median"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:text="Median"/>
+
+    </RadioGroup>
 
     <SeekBar
         android:id="@+id/seek_bar"
@@ -19,8 +42,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginHorizontal="30dp"
-        android:layout_marginVertical="40dp"
-        android:min="2"
-        android:max="7"/>
+        android:layout_marginBottom="40dp"
+        android:max="10"
+        android:min="2" />
 
 </RelativeLayout>
