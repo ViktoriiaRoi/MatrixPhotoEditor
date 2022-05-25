@@ -20,7 +20,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginHorizontal="30dp"
         android:layout_marginVertical="40dp"
-        android:min="1"
-        android:max="20"/>
+        android:min="2"
+        android:max="7"/>
 
 </RelativeLayout>

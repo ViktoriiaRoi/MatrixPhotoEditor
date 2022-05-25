@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Programming/ucu/MatrixPhotoEditor/app/src/main/res/layout/activity_deblur.xml" value="0.25" />
         <entry key="app/src/main/res/drawable/ic_baseline_done_48.xml" value="0.2975" />
         <entry key="app/src/main/res/drawable/ic_baseline_save_24.xml" value="0.2975" />
         <entry key="app/src/main/res/drawable/ic_baseline_save_48.xml" value="0.2975" />
