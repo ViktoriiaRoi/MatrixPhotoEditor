@@ -1,16 +1,22 @@
 package com.example.matrixphotoeditor.denoise;
 
+import android.graphics.Color;
+
 import java.util.ArrayList;
 
 public class MeanFilter implements DenoiseEffect {
 
     @Override
     public int applyEffect(int n, ArrayList<Integer> colorArray) {
-        int convolution = 0;
+        int red=0, green=0, blue=0;
         for (Integer color : colorArray) {
-            convolution += color;
+            red += Color.red(color);
+            green += Color.green(color);
+            blue += Color.blue(color);
         }
-        convolution /= n * n;
-        return convolution;
+        red /= n * n;
+        green /= n * n;
+        blue /= n * n;
+        return Color.rgb(red, green, blue);
     }
 }

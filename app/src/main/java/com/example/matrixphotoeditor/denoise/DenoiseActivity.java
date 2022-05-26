@@ -82,23 +82,16 @@ public class DenoiseActivity extends AppCompatActivity{
         meanRadio.setChecked(true);
     }
 
-    public ArrayList<ArrayList<Integer>> getNeighboringColors(int centerX, int centerY, int n,
+    public ArrayList<Integer> getNeighboringColors(int centerX, int centerY, int n,
                                                               int width, int height) {
-        ArrayList<ArrayList<Integer>> rgbBlockColors = new ArrayList<>(3);
-        for(int i = 0; i < 3; i++) {
-            rgbBlockColors.add(new ArrayList<>());
-        }
+        ArrayList<Integer> rgbBlockColors = new ArrayList<>(n*n);
         int s = (n - 1) / 2;
         for (int y = centerY - s; y <= centerY + s; y++) {
             for (int x = centerX - s; x <= centerX + s; x++) {
-                int []rgb = new int[3];
                 if (0 <= x && x < width && 0 <= y && y < height) {
-                    rgb[0] = Color.red(initialBitmap.getPixel(x, y));
-                    rgb[1] = Color.green(initialBitmap.getPixel(x, y));
-                    rgb[2] = Color.blue(initialBitmap.getPixel(x, y));
-                }
-                for (int k = 0; k < 3; k++) {
-                    rgbBlockColors.get(k).add(rgb[k]);
+                    rgbBlockColors.add(initialBitmap.getPixel(x,y));
+                } else {
+                    rgbBlockColors.add(0);
                 }
             }
         }
@@ -113,12 +106,8 @@ public class DenoiseActivity extends AppCompatActivity{
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                ArrayList<ArrayList<Integer>> neighboringRGB = getNeighboringColors(x, y, n, width, height);
-                int[] colors = new int[3];
-                for (int i = 0; i < 3; i++) {
-                    colors[i] = thisEffect.applyEffect(n, neighboringRGB.get(i));
-                }
-                resultBitmap.setPixel(x, y, Color.rgb(colors[0], colors[1], colors[2]));
+                ArrayList<Integer> neighboringRGB = getNeighboringColors(x, y, n, width, height);
+                resultBitmap.setPixel(x, y, thisEffect.applyEffect(n, neighboringRGB));
             }
         }
         matrixImage.setBitmap(resultBitmap);
