@@ -79,31 +79,6 @@ public class DenoiseActivity extends AppCompatActivity{
         meanRadio.setChecked(true);
     }
 
-    /*
-    public int[] getMedianColors(int x, int y, int stepX, int stepY, int n) {
-        ArrayList<ArrayList<Integer>> rgbBlockColors = new ArrayList<>(3);
-        for(int i = 0; i < 3; i++) {
-            rgbBlockColors.add(new ArrayList<>());
-        }
-        for (int i = y; i < y + stepY; i++) {
-            for (int j = x; j < x + stepX; j++) {
-                int r, g, b;
-                r = Color.red(initialBitmap.getPixel(j, i));
-                g = Color.green(initialBitmap.getPixel(j, i));
-                b = Color.blue(initialBitmap.getPixel(j, i));
-                rgbBlockColors.get(0).add(r);
-                rgbBlockColors.get(1).add(g);
-                rgbBlockColors.get(2).add(b);
-            }
-        }
-        int []rgbMeanColors = {0, 0, 0};
-        for (int i = 0; i < rgbMeanColors.length; i++) {
-            rgbMeanColors[i] = findMedian(rgbBlockColors.get(i));
-        }
-        return rgbMeanColors;
-    }
-     */
-
     public ArrayList<ArrayList<Integer>> getNeighboringColors(int centerX, int centerY, int n,
                                                               int width, int height) {
         ArrayList<ArrayList<Integer>> rgbBlockColors = new ArrayList<>(3);
