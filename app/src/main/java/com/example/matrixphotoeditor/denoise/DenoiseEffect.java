@@ -4,5 +4,5 @@ import java.util.ArrayList;
 
 public interface DenoiseEffect {
 
-    int applyFilter(int n, ArrayList<Integer> colorArray);
+    int applyEffect(int n, ArrayList<Integer> colorArray);
 }

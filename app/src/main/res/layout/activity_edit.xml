@@ -46,11 +46,18 @@
                 android:text="Saturation" />
 
             <Button
-                android:id="@+id/deblur_btn"
+                android:id="@+id/denoise_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
-                android:text="Deblur" />
+                android:text="Denoise" />
+
+            <Button
+                android:id="@+id/double_exp_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:text="Double Exposure" />
 
         </LinearLayout>
 

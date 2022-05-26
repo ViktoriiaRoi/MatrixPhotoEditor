@@ -6,7 +6,7 @@ import java.util.Collections;
 public class MedianFilter implements DenoiseEffect {
 
     @Override
-    public int applyFilter(int n, ArrayList<Integer> colorArray) {
+    public int applyEffect(int n, ArrayList<Integer> colorArray) {
         // O(n logn)
         Collections.sort(colorArray);
         n = colorArray.size();
