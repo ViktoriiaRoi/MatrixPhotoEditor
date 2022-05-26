@@ -31,7 +31,7 @@ public class DenoiseActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_deblur);
+        setContentView(R.layout.activity_denoise);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -115,9 +115,10 @@ public class DenoiseActivity extends AppCompatActivity{
             for (int x = centerX - s; x < centerX + s; x++) {
                 int []rgb = new int[3];
                 if (0 <= x && x < width && 0 <= y && y < height) {
-                    rgb[0] = Color.red(initialBitmap.getPixel(x, y));
-                    rgb[1] = Color.green(initialBitmap.getPixel(x, y));
-                    rgb[2] = Color.blue(initialBitmap.getPixel(x, y));
+                    int pixel = initialBitmap.getPixel(x, y);
+                    rgb[0] = Color.red(pixel);
+                    rgb[1] = Color.green(pixel);
+                    rgb[2] = Color.blue(pixel);
                 } else {
                     rgb[0] = 0;
                     rgb[1] = 0;
@@ -140,7 +141,7 @@ public class DenoiseActivity extends AppCompatActivity{
                 ArrayList<ArrayList<Integer>> neighboringRGB = getNeighboringColors(x, y, n, width, height);
                 int[] colors = new int[3];
                 for (int i = 0; i < 3; i++) {
-                    colors[i] = thisEffect.applyFilter(n, neighboringRGB.get(i));
+                    colors[i] = thisEffect.applyEffect(n, neighboringRGB.get(i));
                 }
                 resultBitmap.setPixel(x, y, Color.rgb(colors[0], colors[1], colors[2]));
             }

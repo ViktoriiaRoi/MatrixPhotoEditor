@@ -16,6 +16,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.matrixphotoeditor.denoise.DenoiseActivity;
+import com.example.matrixphotoeditor.double_exp.DoubleExpActivity;
 import com.example.matrixphotoeditor.simple_effects.SimpleEffectActivity;
 
 public class EditActivity extends AppCompatActivity implements View.OnClickListener {
@@ -28,7 +29,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
     static final String SATURATION = "Saturation";
 
     private final int SIMPLE_EFFECT = 1;
-    private final int DEBLUR_EFFECT = 2;
+    private final int BITMAP_EFFECT = 2;
 
     private MatrixImage matrixImage;
 
@@ -60,8 +61,11 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.saturation_btn:
                 startSimpleEffect(SATURATION);
                 break;
-            case R.id.deblur_btn:
-                startDeblurEffect();
+            case R.id.denoise_btn:
+                startBitmapEffect(DenoiseActivity.class);
+                break;
+            case R.id.double_exp_btn:
+                startBitmapEffect(DoubleExpActivity.class);
         }
     }
 
@@ -69,12 +73,14 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         Button brightBtn = findViewById(R.id.bright_btn);
         Button contrastBtn = findViewById(R.id.contrast_btn);
         Button saturationBtn = findViewById(R.id.saturation_btn);
-        Button deblurBtn = findViewById(R.id.deblur_btn);
+        Button denoiseBtn = findViewById(R.id.denoise_btn);
+        Button doubleExpBtn = findViewById(R.id.double_exp_btn);
 
         brightBtn.setOnClickListener(this);
         contrastBtn.setOnClickListener(this);
-        deblurBtn.setOnClickListener(this);
         saturationBtn.setOnClickListener(this);
+        denoiseBtn.setOnClickListener(this);
+        doubleExpBtn.setOnClickListener(this);
     }
 
     private void startSimpleEffect(String effect) {
@@ -84,10 +90,10 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         startActivityForResult(intent, SIMPLE_EFFECT);
     }
 
-    private void startDeblurEffect() {
-        Intent intent = new Intent(this, DenoiseActivity.class);
+    private void startBitmapEffect(Class<?> activity) {
+        Intent intent = new Intent(this, activity);
         intent.putExtra(BITMAP_ARRAY, matrixImage.getBitmapArray());
-        startActivityForResult(intent, DEBLUR_EFFECT);
+        startActivityForResult(intent, BITMAP_EFFECT);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -99,7 +105,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
                     matrixImage.applyFilter(filterMatrix);
                     break;
 
-                case DEBLUR_EFFECT:
+                case BITMAP_EFFECT:
                     matrixImage.setBitmapArray(data.getByteArrayExtra(BITMAP_ARRAY));
                     break;
             }
