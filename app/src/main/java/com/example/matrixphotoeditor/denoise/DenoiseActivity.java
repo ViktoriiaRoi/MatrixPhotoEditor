@@ -111,8 +111,8 @@ public class DenoiseActivity extends AppCompatActivity{
             rgbBlockColors.add(new ArrayList<>());
         }
         int s = (n - 1) / 2;
-        for (int y = centerY - s; y < centerY + s; y++) {
-            for (int x = centerX - s; x < centerX + s; x++) {
+        for (int y = centerY - s; y <= centerY + s; y++) {
+            for (int x = centerX - s; x <= centerX + s; x++) {
                 int []rgb = new int[3];
                 if (0 <= x && x < width && 0 <= y && y < height) {
                     rgb[0] = Color.red(initialBitmap.getPixel(x, y));
@@ -134,6 +134,8 @@ public class DenoiseActivity extends AppCompatActivity{
     public void deblurImage(int n) {
         int width = initialBitmap.getWidth();
         int height = initialBitmap.getHeight();
+
+        n = 2 * n - 1;
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
