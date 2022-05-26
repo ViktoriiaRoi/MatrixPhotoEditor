@@ -93,10 +93,6 @@ public class DenoiseActivity extends AppCompatActivity{
                     rgb[0] = Color.red(initialBitmap.getPixel(x, y));
                     rgb[1] = Color.green(initialBitmap.getPixel(x, y));
                     rgb[2] = Color.blue(initialBitmap.getPixel(x, y));
-                } else {
-                    rgb[0] = 0;
-                    rgb[1] = 0;
-                    rgb[2] = 0;
                 }
                 for (int k = 0; k < 3; k++) {
                     rgbBlockColors.get(k).add(rgb[k]);
