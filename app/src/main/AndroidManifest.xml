@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MatrixPhotoEditor">
         <activity
+            android:name=".noise.NoiseActivity"
+            android:exported="false" />
+        <activity
             android:name=".double_exp.DoubleExpActivity"
             android:exported="false" />
         <activity

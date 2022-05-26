@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.matrixphotoeditor.denoise.DenoiseActivity;
 import com.example.matrixphotoeditor.double_exp.DoubleExpActivity;
+import com.example.matrixphotoeditor.noise.NoiseActivity;
 import com.example.matrixphotoeditor.simple_effects.SimpleEffectActivity;
 
 public class EditActivity extends AppCompatActivity implements View.OnClickListener {
@@ -64,6 +65,9 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.denoise_btn:
                 startBitmapEffect(DenoiseActivity.class);
                 break;
+            case R.id.noise_btn:
+                startBitmapEffect(NoiseActivity.class);
+                break;
             case R.id.double_exp_btn:
                 startBitmapEffect(DoubleExpActivity.class);
         }
@@ -74,12 +78,14 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         Button contrastBtn = findViewById(R.id.contrast_btn);
         Button saturationBtn = findViewById(R.id.saturation_btn);
         Button denoiseBtn = findViewById(R.id.denoise_btn);
+        Button noiseBtn = findViewById(R.id.noise_btn);
         Button doubleExpBtn = findViewById(R.id.double_exp_btn);
 
         brightBtn.setOnClickListener(this);
         contrastBtn.setOnClickListener(this);
         saturationBtn.setOnClickListener(this);
         denoiseBtn.setOnClickListener(this);
+        noiseBtn.setOnClickListener(this);
         doubleExpBtn.setOnClickListener(this);
     }
 

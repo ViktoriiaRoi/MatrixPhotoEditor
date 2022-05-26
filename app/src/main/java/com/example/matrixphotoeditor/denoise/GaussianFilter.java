@@ -11,7 +11,7 @@ public class GaussianFilter implements DenoiseEffect {
     }
 
     @Override
-    public int applyFilter(int n, ArrayList<Integer> colorArray) {
+    public int applyEffect(int n, ArrayList<Integer> colorArray) {
         double[] kernel = new double[n * n];
         int idx = 0;
         int s = (n - 1) / 2;
