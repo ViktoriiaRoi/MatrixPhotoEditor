@@ -70,6 +70,9 @@ public class DenoiseActivity extends AppCompatActivity{
                     case R.id.radio_median:
                         thisEffect = new MedianFilter();
                         break;
+                    case R.id.radio_gauss:
+                        thisEffect = new GaussianFilter();
+                        break;
                 }
                 if (lastValue != 0) {
                     deblurImage(lastValue);

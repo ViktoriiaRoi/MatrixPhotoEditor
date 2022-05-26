@@ -34,6 +34,12 @@
             android:layout_marginHorizontal="16dp"
             android:text="Median"/>
 
+        <RadioButton android:id="@+id/radio_gauss"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:text="Gaussian"/>
+
     </RadioGroup>
 
     <SeekBar
