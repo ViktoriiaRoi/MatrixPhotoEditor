@@ -21,7 +21,7 @@
             android:name=".denoise.DenoiseActivity"
             android:exported="false" />
         <activity
-            android:name=".simple_effects.SimpleEffectActivity"
+            android:name=".SimpleEffectActivity"
             android:exported="false" />
         <activity
             android:name=".EditActivity"

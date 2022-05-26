@@ -18,7 +18,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.matrixphotoeditor.denoise.DenoiseActivity;
 import com.example.matrixphotoeditor.double_exp.DoubleExpActivity;
 import com.example.matrixphotoeditor.noise.NoiseActivity;
-import com.example.matrixphotoeditor.simple_effects.SimpleEffectActivity;
 
 public class EditActivity extends AppCompatActivity implements View.OnClickListener {
     static final String MATRIX = "Matrix";

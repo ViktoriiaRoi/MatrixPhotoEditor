@@ -74,6 +74,10 @@ public class MatrixImage {
         this.bitmap = newBitmap;
         imageView.setImageBitmap(newBitmap);
     }
+    
+    public void previewFilter(ColorMatrix colorMatrix) {
+        imageView.setColorFilter(new ColorMatrixColorFilter(colorMatrix));
+    }
 
     public void applyFilter(ColorMatrix colorMatrix) {
         Bitmap filterBitmap = Bitmap.createBitmap(bitmap.getWidth(),
