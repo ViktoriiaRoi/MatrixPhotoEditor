@@ -41,8 +41,17 @@ public class DoubleExpActivity extends BitmapEffectActivity {
                     case R.id.radio_default:
                         thisEffect = new DefaultEffect();
                         break;
+                    case R.id.radio_light:
+                        thisEffect = new LightenEffect();
+                        break;
+                    case R.id.radio_dark:
+                        thisEffect = new DarkenEffect();
+                        break;
                     case R.id.radio_add:
                         thisEffect = new AddingEffect();
+                        break;
+                    case R.id.radio_sub:
+                        thisEffect = new SubtractEffect();
                         break;
                 }
                 previewEffect(lastValue);
@@ -58,6 +67,9 @@ public class DoubleExpActivity extends BitmapEffectActivity {
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
+                if (x == 60 && y == 100) {
+                    x = x;
+                }
                 int first = initialBitmap.getPixel(x, y);
                 int second = newBitmap.getPixel(x, y);
                 resultBitmap.setPixel(x, y, Color.rgb(

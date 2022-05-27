@@ -25,15 +25,27 @@
         <RadioButton android:id="@+id/radio_default"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
             android:text="Default"/>
+
+        <RadioButton android:id="@+id/radio_light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lighten"/>
+
+        <RadioButton android:id="@+id/radio_dark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Darken"/>
 
         <RadioButton android:id="@+id/radio_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:text="Adding"/>
+            android:text="Add"/>
 
+        <RadioButton android:id="@+id/radio_sub"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Subtract"/>
     </RadioGroup>
 
     <SeekBar
