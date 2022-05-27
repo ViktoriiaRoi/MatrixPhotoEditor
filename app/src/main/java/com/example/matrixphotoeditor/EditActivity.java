@@ -1,5 +1,6 @@
 package com.example.matrixphotoeditor;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.ColorMatrix;
 import android.net.Uri;
@@ -13,6 +14,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.matrixphotoeditor.denoise.DenoiseActivity;
@@ -32,6 +34,8 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
     private final int BITMAP_EFFECT = 2;
 
     private MatrixImage matrixImage;
+    private AlertDialog alertDialog;
+    private boolean saved = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +52,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         matrixImage = new MatrixImage(imageView, imageUri);
 
         initializeButtons();
+        alertDialog = buildAlertDialog();
     }
 
     public void onClick(View v) {
@@ -88,6 +93,27 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         doubleExpBtn.setOnClickListener(this);
     }
 
+    private AlertDialog buildAlertDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setMessage("All unsaved changes will be lost")
+                .setCancelable(false)
+                .setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                })
+                .setNegativeButton("Discard", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        finish();
+                    }
+                });
+
+        AlertDialog alert = builder.create();
+        alert.setTitle("Discard changes?");
+        return alert;
+    }
+
     private void startSimpleEffect(String effect) {
         Intent intent = new Intent(this, SimpleEffectActivity.class);
         intent.putExtra(EFFECT, effect);
@@ -114,6 +140,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
                     matrixImage.setBitmapArray(data.getByteArrayExtra(BITMAP_ARRAY));
                     break;
             }
+            saved = false;
         }
     }
 
@@ -124,15 +151,29 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         return super.onCreateOptionsMenu(menu);
     }
 
+    private void discardChanges(){
+        if (saved) {
+            finish();
+        } else {
+            alertDialog.show();
+        }
+    }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.save_btn:
                 matrixImage.saveToGallery(getApplicationContext());
+                saved = true;
                 break;
             case android.R.id.home:
-                finish();
+                discardChanges();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        discardChanges();
     }
 }

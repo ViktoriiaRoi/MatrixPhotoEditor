@@ -30,6 +30,7 @@ public class DoubleExpActivity extends BitmapEffectActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_double_exp);
 
+        actionBar.setTitle("Double Exposure");
         initializeElements(findViewById(R.id.user_image), findViewById(R.id.seek_bar));
 
         RadioGroup radioGroup = findViewById(R.id.radio_group);

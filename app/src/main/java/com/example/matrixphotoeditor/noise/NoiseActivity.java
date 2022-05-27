@@ -15,6 +15,7 @@ public class NoiseActivity extends BitmapEffectActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_noise);
 
+        actionBar.setTitle("Noise");
         initializeElements(findViewById(R.id.user_image), findViewById(R.id.seek_bar));
     }
 

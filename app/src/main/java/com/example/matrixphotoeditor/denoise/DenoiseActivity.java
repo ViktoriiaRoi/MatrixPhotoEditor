@@ -18,6 +18,7 @@ public class DenoiseActivity extends BitmapEffectActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_denoise);
 
+        actionBar.setTitle("Denoise");
         initializeElements(findViewById(R.id.user_image), findViewById(R.id.seek_bar));
 
         RadioGroup radioGroup = findViewById(R.id.radio_group);
