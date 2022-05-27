@@ -1,5 +1,7 @@
 package com.example.matrixphotoeditor.double_exp;
 
+import static java.lang.Math.min;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -74,19 +76,20 @@ public class DoubleExpActivity extends BitmapEffectActivity {
     }
 
     private Bitmap scaleBitmap(Bitmap bitmap) {
-        int initialWidth = initialBitmap.getWidth();
-        int initialHeight = initialBitmap.getHeight();
+        int initWidth = initialBitmap.getWidth();
+        int initHeight = initialBitmap.getHeight();
+        /*
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
 
-        if (initialWidth < initialHeight) {
-            height = (initialWidth * height) / width;
-            width = initialWidth;
+        if (initWidth > initHeight) {
+            height = (initWidth * height) / width;
+            width = initWidth;
         } else {
-            width = (initialHeight * width) / height;
-            height = initialHeight;
-        }
-        return Bitmap.createScaledBitmap(bitmap, width, height, true);
+            width = (initHeight * width) / height;
+            height = initHeight;
+        }*/
+        return Bitmap.createScaledBitmap(bitmap, initWidth, initHeight, true);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
