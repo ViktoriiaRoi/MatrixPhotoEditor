@@ -41,6 +41,9 @@ public class DoubleExpActivity extends BitmapEffectActivity {
                     case R.id.radio_default:
                         thisEffect = new DefaultEffect();
                         break;
+                    case R.id.radio_add:
+                        thisEffect = new AddingEffect();
+                        break;
                 }
                 previewEffect(lastValue);
             }

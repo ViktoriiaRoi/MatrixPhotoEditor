@@ -4,7 +4,7 @@ public class DefaultEffect implements DoubleExpEffect{
 
     @Override
     public int combinePixels(int first, int second, int intensity) {
-        double i = intensity/200.0 + 0.5;
-        return (int) ((1-i)*first + i*second);
+        double i = intensity/200.0;
+        return (int) ((0.5-i)*first + (0.5+i)*second);
     }
 }

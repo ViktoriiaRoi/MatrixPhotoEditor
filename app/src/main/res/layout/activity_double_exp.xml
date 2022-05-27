@@ -28,6 +28,12 @@
             android:layout_marginHorizontal="16dp"
             android:text="Default"/>
 
+        <RadioButton android:id="@+id/radio_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:text="Adding"/>
+
     </RadioGroup>
 
     <SeekBar
