@@ -11,10 +11,48 @@
         android:layout_width="match_parent"
         android:layout_height="500dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp" />
+        android:layout_marginTop="60dp" />
 
     <RadioGroup
-        android:id="@+id/radio_group"
+        android:id="@+id/first_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_above="@id/second_group"
+        android:layout_marginBottom="8dp">
+
+        <RadioButton android:id="@+id/radio_default"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/main_blue"
+            android:textColor="@color/white"
+            android:fontFamily="@font/inter"
+            android:layout_marginHorizontal="@dimen/radio_btn_margin"
+            android:text="Default"/>
+
+        <RadioButton android:id="@+id/radio_light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/main_blue"
+            android:textColor="@color/white"
+            android:fontFamily="@font/inter"
+            android:layout_marginHorizontal="@dimen/radio_btn_margin"
+            android:text="Lighten"/>
+
+        <RadioButton android:id="@+id/radio_dark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/main_blue"
+            android:textColor="@color/white"
+            android:fontFamily="@font/inter"
+            android:layout_marginHorizontal="@dimen/radio_btn_margin"
+            android:text="Darken"/>
+
+    </RadioGroup>
+
+    <RadioGroup
+        android:id="@+id/second_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -22,30 +60,24 @@
         android:layout_above="@id/seek_bar"
         android:layout_marginBottom="16dp">
 
-        <RadioButton android:id="@+id/radio_default"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Default"/>
-
-        <RadioButton android:id="@+id/radio_light"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Lighten"/>
-
-        <RadioButton android:id="@+id/radio_dark"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Darken"/>
-
         <RadioButton android:id="@+id/radio_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:buttonTint="@color/main_blue"
+            android:textColor="@color/white"
+            android:fontFamily="@font/inter"
+            android:layout_marginHorizontal="@dimen/radio_btn_margin"
             android:text="Add"/>
 
         <RadioButton android:id="@+id/radio_sub"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:buttonTint="@color/main_blue"
+            android:textColor="@color/white"
+            android:fontFamily="@font/inter"
+            android:layout_marginHorizontal="@dimen/radio_btn_margin"
             android:text="Subtract"/>
+
     </RadioGroup>
 
     <SeekBar
@@ -55,6 +87,9 @@
         android:layout_alignParentBottom="true"
         android:layout_marginHorizontal="30dp"
         android:layout_marginBottom="40dp"
+        android:progressBackgroundTint="@color/white"
+        android:progressTint="@color/main_blue"
+        android:thumbTint="@color/main_blue"
         android:max="100"
         android:min="-100" />
 

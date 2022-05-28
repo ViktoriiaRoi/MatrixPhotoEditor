@@ -24,6 +24,7 @@ public class DoubleExpActivity extends BitmapEffectActivity {
     private Bitmap newBitmap;
     private DoubleExpEffect thisEffect;
     private int lastValue = 0;
+    private boolean clearRequest = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +34,20 @@ public class DoubleExpActivity extends BitmapEffectActivity {
         actionBar.setTitle("Double Exposure");
         initializeElements(findViewById(R.id.user_image), findViewById(R.id.seek_bar));
 
-        RadioGroup radioGroup = findViewById(R.id.radio_group);
+        RadioGroup firstGroup = findViewById(R.id.first_group);
+        RadioGroup secondGroup = findViewById(R.id.second_group);
         defaultRadio = findViewById(R.id.radio_default);
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+        firstGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+                if (checkedId == -1 || clearRequest) {
+                    clearRequest = false;
+                    return;
+                }
+                clearRequest = true;
+                secondGroup.clearCheck();
+
                 switch (checkedId) {
                     case R.id.radio_default:
                         thisEffect = new DefaultEffect();
@@ -48,6 +58,23 @@ public class DoubleExpActivity extends BitmapEffectActivity {
                     case R.id.radio_dark:
                         thisEffect = new DarkenEffect();
                         break;
+                }
+                previewEffect(lastValue);
+            }
+        });
+
+        secondGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+                if (checkedId == -1 || clearRequest) {
+                    clearRequest = false;
+                    return;
+                }
+
+                clearRequest = true;
+                firstGroup.clearCheck();
+
+                switch (checkedId) {
                     case R.id.radio_add:
                         thisEffect = new AddingEffect();
                         break;

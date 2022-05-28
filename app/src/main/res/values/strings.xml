@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">MatrixPhotoEditor</string>
+    <string name="app_name">Matrix Photo Editor</string>
+    <string name="bright">Brightness</string>
+    <string name="contrast">Contrast</string>
+    <string name="saturation">Saturation</string>
+    <string name="denoise">Denoise</string>
+    <string name="noise">Noise</string>
+    <string name="double_exp">Double exposure</string>
 </resources>

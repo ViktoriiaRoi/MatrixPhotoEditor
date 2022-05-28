@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="500dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp" />
+        android:layout_marginTop="60dp" />
 
     <RadioGroup
         android:id="@+id/radio_group"
@@ -26,18 +26,27 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
+            android:buttonTint="@color/main_blue"
+            android:fontFamily="@font/inter"
+            android:textColor="@color/white"
             android:text="Mean"/>
 
         <RadioButton android:id="@+id/radio_median"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
+            android:buttonTint="@color/main_blue"
+            android:fontFamily="@font/inter"
+            android:textColor="@color/white"
             android:text="Median"/>
 
         <RadioButton android:id="@+id/radio_gauss"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
+            android:buttonTint="@color/main_blue"
+            android:fontFamily="@font/inter"
+            android:textColor="@color/white"
             android:text="Gaussian"/>
 
     </RadioGroup>
@@ -49,6 +58,9 @@
         android:layout_alignParentBottom="true"
         android:layout_marginHorizontal="30dp"
         android:layout_marginBottom="40dp"
+        android:progressBackgroundTint="@color/white"
+        android:progressTint="@color/main_blue"
+        android:thumbTint="@color/main_blue"
         android:max="5"
         android:min="2" />
 
