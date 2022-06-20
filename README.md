@@ -17,3 +17,4 @@ This application has posibilities to choose a photo from your device, apply many
 * Double exposure (default, lighten, darken, add, subtract modes)
 
 ## Demo
+<img src="demo/demo.gif"/>
